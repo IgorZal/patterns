@@ -1,38 +1,52 @@
+from abc import ABC, abstractmethod
 import copy
 
-class Prototype:
-    def __init__(self):
-        self.objects={}
-        self.current_obj=None
+class GeoObject(ABC):
 
-    def add_obj(self, name, obj):
-        self.objects[name] = obj
-        
-    def del_obj(self, name):
-        del self.objects[name]
+  @abstractmethod
+  def clone(self):
+    pass
 
-    def set_current_obj(self,key):
-        self.current_obj=key
+  @abstractmethod
+  def set_param():
+    pass
+
     
-    def clone(self, name, attrs):
-        obj = copy.deepcopy(self.objects[name])
-        obj.__dict__.update(attrs)
-        return obj
+class Mountain(GeoObject):
 
-class Mountain():
-    pass
+  def clone(self):
+    return copy.deepcopy(self)
+  
+  def set_param(self,n,h):
+    self.name=n
+    self.hight=h
 
-class River():
-    pass
+  def __str__(self):
+    print(self.name+':'+self.hight)
+      
 
-prototype=Prototype()
-prototype.add_obj('rock', Mountain())
-m1=prototype.clone('rock',{'name':'Monblan','hight':'4800'})
-prototype.add_obj('water', River())
-r1=prototype.clone('water',{'name':'Volga','lenght':'3500'})
+class River(GeoObject):
+
+  def clone(self):
+    return copy.deepcopy(self)
+  
+  def set_param(self,n,l):
+    self.name=n
+    self.lenght=l
+
+  def __str__(self):
+    return self.name+':'+self.lenght  
 
 
+class Discoverer:
+  def __init__(self):
+    self.types = [Mountain(), River()]
+  
+  def make(self, index):
+    return self.types[index].clone()     
 
 
-
-
+d=Discoverer()
+p=d.make(1)
+p.set_param('Monblan','4700m')
+print(p)
